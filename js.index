@@ -1,0 +1,52 @@
+let expenses = [];
+let income = 0;
+
+// Add Income
+document.getElementById("addIncomeBtn").addEventListener("click", function() {
+    const incomeInput = document.getElementById("incomeInput").value;
+    income = parseFloat(incomeInput);
+    document.getElementById("totalIncome").innerText = income.toFixed(2);
+    updateBudget();
+});
+
+// Add Expense
+document.getElementById("addExpenseBtn").addEventListener("click", function() {
+    const desc = document.getElementById("expenseDesc").value;
+    const amount = parseFloat(document.getElementById("expenseAmount").value);
+    const category = document.getElementById("expenseCategory").value;
+
+    if (desc && amount) {
+        expenses.push({
+            desc,
+            amount,
+            category
+        });
+        renderExpenses();
+        updateTotalExpenses();
+        updateBudget();
+    }
+});
+
+// Render Expense List
+function renderExpenses() {
+    const expenseList = document.getElementById("expenseList");
+    expenseList.innerHTML = ""; // Clear the list
+    expenses.forEach((expense, index) => {
+        const li = document.createElement("li");
+        li.innerHTML = `${expense.desc} - $${expense.amount.toFixed(2)} <span>(${expense.category})</span>`;
+        expenseList.appendChild(li);
+    });
+}
+
+// Update Total Expenses
+function updateTotalExpenses() {
+    const totalExpenses = expenses.reduce((acc, expense) => acc + expense.amount, 0);
+    document.getElementById("totalExpenses").innerText = totalExpenses.toFixed(2);
+}
+
+// Update Remaining Budget
+function updateBudget() {
+    const totalExpenses = expenses.reduce((acc, expense) => acc + expense.amount, 0);
+    const remainingBudget = income - totalExpenses;
+    document.getElementById("remainingBudget").innerText = remainingBudget.toFixed(2);
+}
